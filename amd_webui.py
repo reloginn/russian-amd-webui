@@ -21,7 +21,7 @@ if not output_dir.exists():
         output_dir.mkdir(parents=True, exist_ok=True)
 
 
-def txt2img(prompt, negative_prompt, steps, height, width, scale, denoise_strength=0, seed=None, scheduler=None, num_image=None):
+def txt2img(prompt, negative_prompt, steps, height, width, scale, denoise_strength=0, seed=None, scheduler=None):
     try:
         seed = int(seed)
         if seed < 0:
@@ -37,8 +37,7 @@ def txt2img(prompt, negative_prompt, steps, height, width, scale, denoise_streng
                 height = height,
                 width = width,
                 guidance_scale=scale,
-                generator = generator,
-                num_images_per_prompt = num_image
+                generator = generator
                 
                 ).images[0]
 
@@ -46,7 +45,7 @@ def txt2img(prompt, negative_prompt, steps, height, width, scale, denoise_streng
     image.save(output_dir/img_name)
     return image
 
-def img2img(prompt, negative_prompt, image_input, steps, height, width, scale, denoise_strength, seed=None, scheduler=None, num_image=None):
+def img2img(prompt, negative_prompt, image_input, steps, height, width, scale, denoise_strength, seed=None, scheduler=None):
     
     if seed == '':
 
@@ -65,8 +64,7 @@ def img2img(prompt, negative_prompt, image_input, steps, height, width, scale, d
                 num_inference_steps=steps,
                 guidance_scale=scale,
                 negative_prompt = negative_prompt,
-                num_images_per_prompt = num_image,
-                generator = generator,
+                generator = generator
                 ).images[0]
                 
     img_name = datetime.datetime.now().strftime('%Y-%m-%d-%H-%M') + ".png"
@@ -164,25 +162,22 @@ def start_app():
                         denoise_strength = gr.Slider(label='Сила Denoise', value = 1, minimum = 0, maximum=1, step = 0.1)
                     with gr.Row():
                         seed_input = gr.Textbox(label='Ключ генерации')
-                        scheduler_input = gr.Dropdown(['Опция 1', 'Опция 2'])
-                        
-                    num_image = gr.Slider(label='Количество изображений', value = 1, minimum = 1, maximum=10, step = 1)
                         
                     with gr.Row():
                         txt2img_button = gr.Button('Сгенерировать')
                     
                 txt2img_output = gr.Image(label='Итоговое изображение')
         with gr.Tab('img2img'):
-            img2img_prompt_input = gr.Textbox(label='')
+            img2img_prompt_input = gr.Textbox(label='Запрос')
             img2img_negative_prompt_input = gr.Textbox(label='Отрицательный запрос')
             with gr.Row():
-                img2img_image_input = gr.Image()
+                img2img_image_input = gr.Image(label="Ваше изображение")
                 
-                img2img_image_output = gr.Image(label='Вывод img2img')
+                img2img_image_output = gr.Image(label='Итоговое изображение')
             with gr.Row():
                     img2img_model_input = gr.Dropdown(label='Выберите модель:', choices = display_onnx_models())
                     img2img_test_output = gr.Textbox(label='Статус модели')
-                    img2img_inference_step_input = gr.Slider(label='Steps', value = 30, minimum = 5, maximum=100, step = 1)
+                    img2img_inference_step_input = gr.Slider(label='Шаги', value = 30, minimum = 5, maximum=100, step = 1)
             with gr.Row():
                 img2img_image_height = gr.Slider(label='Высота', value = 512, minimum = 0, maximum=2048, step = 64)
                 img2img_image_width = gr.Slider(label='Ширина', value = 512, minimum = 0, maximum=2048, step = 64)
@@ -191,35 +186,32 @@ def start_app():
                 img2img_denoise_strength = gr.Slider(label='Сила Denoise', value = 1, minimum = 0, maximum=1, step = 0.1)
             with gr.Row():
                 img2img_seed_input = gr.Textbox(label='Ключ генерации')
-                img2img_num_image = gr.Slider(label='Количество изображений', value = 1, minimum = 1, maximum=10, step = 1)
                 
                 
             img2img_button = gr.Button('Сгенерировать')
         with gr.Tab('Менеджер моделей'):
             gr.Markdown("Некоторые модели требуют, чтобы вы вошли в Huggingface и согласились с их условиями. Обязательно сделайте это перед загрузкой моделей!")
-            model_download_input = gr.Textbox()
+            model_download_input = gr.Textbox(label="Модель")
             model_download_button = gr.Button('Установить модель')
             model_dir_refresh = gr.Button('Обновить')
             
         with gr.Tab('Настройки'):
             gr.HTML("Нажмите на эту ссылку чтобы получить свой API ключ: <a href='https://huggingface.co/settings/tokens' style='color:blue'>HuggingFace Access Token</a>")
-            hugginface_token_input = gr.Textbox()
-            huggingface_login_message = gr.Textbox()
+            huggingface_token_input = gr.Textbox(label="Токен")
+            huggingface_login_message = gr.Textbox(label="Сообщение о авторизации")
             huggingface_login_button = gr.Button('Войти в HuggingFace')
             
         txt2img_button.click(txt2img, inputs=[txt2img_prompt_input, txt2img_negative_prompt_input, inference_step_input,
                                                                                   image_height, image_width, scale, denoise_strength,
-                                                                                  seed_input, scheduler_input,
-                                                                                  num_image], outputs = txt2img_output)
+                                                                                  seed_input], outputs = txt2img_output)
         
         img2img_button.click(img2img, inputs=[img2img_prompt_input, img2img_negative_prompt_input, img2img_image_input, img2img_inference_step_input,
                                                                                   img2img_image_height, img2img_image_width, img2img_scale, img2img_denoise_strength,
-                                                                                  img2img_seed_input, img2img_num_image
-                                                                                  ], outputs = img2img_image_output, show_progress=True)
+                                                                                  img2img_seed_input], outputs = img2img_image_output, show_progress=True)
 
 
         huggingface_login_button.click(huggingface_login,
-                                       inputs = hugginface_token_input,
+                                       inputs = huggingface_token_input,
                                        outputs = huggingface_login_message)
         
         model_download_button.click(download_sd_model, inputs = model_download_input)

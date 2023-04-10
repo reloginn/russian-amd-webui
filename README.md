@@ -1,38 +1,44 @@
-# amd_webui
-## System Requirements
-- AMD GPU with at least 8GB VRAM
-- One of: Python 3.7, 3.8, 3.9, or 3.10 | Download from https://www.python.org/
-- Git | Download from https://git-scm.com/downloads
+# AMD WebUI
 
-## How To Install
-- Download the whole repo, place in a drive with large enough space
-- Double click on `start.bat` to install & run. This will create a new Python virtual environment and install all required libraries. The installation can take up to 5 mins depending on your machine. At the end of the installation, you'll see the program crash with the following error that NO module named "diffusers":
+## Автор
+- ![PythonInOffice](https://github.com/pythoninoffice) - оригинальный автор проекта.
+- ![AMD WebUI](https://github.com/pythoninoffice/amd_webui) - оригинальный репозиторий проекта, я лишь взял его за основу и адаптировал под русский язык, параллельно внёс парочку правок по коду.
 
-![image](https://user-images.githubusercontent.com/90436829/205534573-eb9c3b6c-5a3d-4a7a-b218-39cc286ca5f3.png)
+## Системные требования
+- Видеокарта AMD с VRAM не менее 8 ГБ
+- Версия Python: 3.7, 3.8, 3.9 или 3.10 | Можно скачать на сайте: https://www.python.org/
+- Git | Можно скачать на сайте: https://git-scm.com/downloads
 
-- Close the black screen (command prompt), and re-open `start.bat`, a web-ui should appear shortly
+## Как установить?
+- Клонируйте данный репозиторий с помощью `git clone https://github.com/reloginn/russian-amd-webui` на диск где свободно не менее `5 ГБ`
+- Два раза нажмите на `start.bat` и дождитесь установки, после успешной установки создастся новый venv и установятся все нужные библиотеки. Установка занимает примерно 5 минут, зависит от вашего компьютера. В конце установки программа аварийно совершится с ошибкой `no module named "diffusers"`:
 
-## Huggingface login
-- Copy your Huggingface access token from Huggingface, paste into the first textbox on the "Settings" tab, click on `Login Huggingface`. You should see "login successful" message on the next textbox on the same tab.
-![image](https://user-images.githubusercontent.com/90436829/205535219-5c2b1e5f-5164-4d06-80c9-d3a40e2ef251.png)
+![Изображение](https://user-images.githubusercontent.com/90436829/205534573-eb9c3b6c-5a3d-4a7a-b218-39cc286ca5f3.png)
+
+- Закройте командную строку, и опять откройте `start.bat`, вскоре должен запуститься WebUI.
+
+## Авторизация в HuggingFace
+- Перейдите в `Настройки` и нажмите на `HuggingFace Access Token`:
+  1. Авторизуйтесь в HuggingFace.
+  2. На данной странице нажмите на `New token` где в поле `name` укажите: `amd_venv`, а в поле `Role` выберите `Read`,
+  далее нажмите ещё раз на `New token` где в поле `name` укажите `paperspace`, а в поле `Role` выберите `Write`.
+  3. Скопируйте токен `amd_venv`, опять перейдите в настройки WebUI и в поле `Токен` вставьте свой токен, далее нажмите `Войти в HuggingFace`.
+  Вы должны увидить сообщение об успешной авторизации.
 
 
-## Downloading SD Models
-- Once successfully logged into Huggingface, head to Model Manager tab, enter the model name found on huggingface, for example: `stabilityai/stable-diffusion-2`
-- Click on Download model. This step will download the diffuers model and then convert them into onnx format. This step can take up to 10-30 mins depends on your internet connection and CPU speed
-![image](https://user-images.githubusercontent.com/90436829/205535362-353580bc-6466-490c-8904-e7a0bfcfb1a7.png)
-![image](https://user-images.githubusercontent.com/90436829/205535867-5fc356dd-fd40-4eaa-bbee-198a0102bfa0.png)
+## Установка модели
+- После успешного входа в HuggingFace перейдите `Менеджер моделей`, в `Модель` введите найденное имя модели на HuggingFace, к примеру: `stabilityai/stable-diffusion-2`
+- Нажмите на `Установить модель`. Далее дождитесь загрузки, все логи загрузки вы будете видеть в консоли, обычно загрузка занимает 10-30 минут, всё зависит от вашего интернет соединения и скорости CPU.
 
-- Monitor the blackscreen, once the model download & conversion is done, you'll see "Uninstalling onnx....". Then close the command prompt, and re-open `start.bat` again.
-![image](https://user-images.githubusercontent.com/90436829/205537004-fb7a3296-1bfe-4533-81a4-efb3013a1a87.png)
+- Следите за логами в командной строке, когда загрузка и преобразование модели будет завершено, вы увидите `Uninstalling onnx...`:
+![Изображение](https://user-images.githubusercontent.com/90436829/205537004-fb7a3296-1bfe-4533-81a4-efb3013a1a87.png)
 
-- You should see available models appear in the `Select a model` dropdown on the txt2img tab, select a model and wait for it to load
-![image](https://user-images.githubusercontent.com/90436829/205537222-a2d5f18f-644a-4916-ad4b-cce9d5d19e24.png)
+- После того как вы увидели `Uninstalling onnx...` закройте командную строку и откройте `start.bat` опять.
 
-- During image generation, the blackscreen should show something like this:
-![image](https://user-images.githubusercontent.com/90436829/205537336-88597e48-5f49-4010-95f1-e2626f234bd3.png)
+- После успешной загрузки WebUI вы можете начать генерировать изображения, достаточно в выпадающем списке `Выберите модель:` выбрать нужную вам модель и в `Статус модели` дождаться надписи `Модель готова`
 
-- If the blackscreen show something about "DmlExecutionProvider" is not in available provider names, then you are using CPU for image generation and something has gone wrong, contact me if this happens to you
-![image](https://user-images.githubusercontent.com/90436829/205537433-fa0c7794-7eaf-4b23-8ebf-9d4ba16ce0b4.png)
+## `DmlExecutionProvider` - что это?
+- Если в командной строке появится надпись: `"DmlExecutionProvider" is not in available provider names`, то это значит что вы пытаетесь генерировать картинки на CPU, а не на GPU.
+![Изображение](https://user-images.githubusercontent.com/90436829/205537433-fa0c7794-7eaf-4b23-8ebf-9d4ba16ce0b4.png)
 
-- Enjoy :)
+## Наслаждайтесь :)

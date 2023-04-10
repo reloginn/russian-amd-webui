@@ -144,7 +144,7 @@ def load_onnx_model_i2i(model):
 def start_app():
     with gr.Blocks() as app:
         gr.Markdown('StableDiffusion WebUI для видеокарт AMD на операционной системе Windows')
-        with gr.Tab('txt2img'):
+        with gr.Tab('Текст в изображение'):
             txt2img_prompt_input = gr.Textbox(label='Запрос')
             txt2img_negative_prompt_input = gr.Textbox(label='Отрицательный запрос')
             with gr.Row():
@@ -159,7 +159,7 @@ def start_app():
                         image_width = gr.Slider(label='Ширина', value = 512, minimum = 0, maximum=2048, step = 32)
                     with gr.Row():
                         scale = gr.Slider(label='Скейл', value = 7.5, minimum = 0, maximum=15, step = 0.1)
-                        denoise_strength = gr.Slider(label='Сила Denoise', value = 1, minimum = 0, maximum=1, step = 0.1)
+                        denoise_strength = gr.Slider(label='Сила шумопонижения', value = 1, minimum = 0, maximum=1, step = 0.1)
                     with gr.Row():
                         seed_input = gr.Textbox(label='Ключ генерации')
                         
@@ -167,7 +167,7 @@ def start_app():
                         txt2img_button = gr.Button('Сгенерировать')
                     
                 txt2img_output = gr.Image(label='Итоговое изображение')
-        with gr.Tab('img2img'):
+        with gr.Tab('Изображение в изображение'):
             img2img_prompt_input = gr.Textbox(label='Запрос')
             img2img_negative_prompt_input = gr.Textbox(label='Отрицательный запрос')
             with gr.Row():
@@ -183,7 +183,7 @@ def start_app():
                 img2img_image_width = gr.Slider(label='Ширина', value = 512, minimum = 0, maximum=2048, step = 64)
             with gr.Row():
                 img2img_scale = gr.Slider(label='Скейл', value = 7.5, minimum = 0, maximum=15, step = 0.1)
-                img2img_denoise_strength = gr.Slider(label='Сила Denoise', value = 1, minimum = 0, maximum=1, step = 0.1)
+                img2img_denoise_strength = gr.Slider(label='Сила шумопонижения', value = 1, minimum = 0, maximum=1, step = 0.1)
             with gr.Row():
                 img2img_seed_input = gr.Textbox(label='Ключ генерации')
                 
